@@ -11,12 +11,12 @@ const Lobby = () => {
     useState<boolean>(false)
   const [roomIdInput, setRoomIdInput] = useState<string>('')
   const { createNewRoom, joinNewRoom, playerInfo } = useWomContext()
-  const [gameTime, setGameTime] = useState<number>(0)
+  const [counterAppeared, setCounterAppeared] = useState<number>(0)
 
   const handleGameMaster = () => {
     if (!name) return
     // Hit Firebase create room
-    createNewRoom(name, gameTime, (success) => {
+    createNewRoom(name, counterAppeared, (success) => {
       if (success) {
         toast.success(`success create room`, {
           position: 'top-center',
@@ -101,9 +101,9 @@ const Lobby = () => {
             label="Input Room Id"
             variant="outlined"
             size="small"
-            value={gameTime}
+            value={counterAppeared}
             onChange={(event) => {
-              setGameTime(Number(event.target.value))
+              setCounterAppeared(Number(event.target.value))
             }}
             sx={{ width: '150px' }}
           />

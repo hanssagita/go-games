@@ -6,7 +6,7 @@ import { playerInfoData } from '../types/wom';
 
 interface WomContextData {
   playerInfo: playerInfoData
-  createNewRoom: (name: string, gameTime: number, callBack: (success: boolean) => void) => void
+  createNewRoom: (name: string, counterAppeared: number, callBack: (success: boolean) => void) => void
   joinNewRoom: (name: string, roomId: string, callBack: (success: boolean) => void) => void
   setPlayerInfo: (data: playerInfoData) => void
 }
@@ -16,7 +16,7 @@ const WomContext = createContext<WomContextData | undefined>(undefined);
 const WomProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [playerInfo, setPlayerInfo] = useState<playerInfoData>({})
 
-  const createNewRoom = async (name: string, gameTime: number, callBack: (success: boolean) => void) => {
+  const createNewRoom = async (name: string, counterAppeared: number, callBack: (success: boolean) => void) => {
     const customCode = customAlphabet('1234567890', 6)
     const roomId = customCode()
     const playerId = nanoid()
@@ -24,12 +24,14 @@ const WomProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
     try {
       await set(ref(database, `wom/${roomId}`), {
         status: false,
-        gameTime,
+        counterAppeared,
+        molePosition: 4,
         players: {
           [playerId]: {
             id: playerId,
             name,
-            status: 'GM'
+            status: 'GM',
+            score: 0
           },
         },
       })
@@ -53,7 +55,8 @@ const WomProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
       await set(ref(database, `wom/${roomId}/players/${playerId}` ), {
         id: playerId,
         name,
-        status: 'NORMAL'
+        status: 'NORMAL',
+        score: 0
       });
       setPlayerInfo({
         id: playerId,

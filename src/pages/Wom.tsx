@@ -7,6 +7,7 @@ import { useLocation, useHistory } from 'react-router-dom'
 import queryString from 'query-string'
 import { ref, child, get } from "firebase/database";
 import { database } from '../utils/firebaseConf'
+import WomGame from '../components/WomGame'
 
 const Wom = () => {
   const { playerInfo, setPlayerInfo } = useWomContext()
@@ -45,6 +46,7 @@ const Wom = () => {
   return (
     <Box>
       {playerInfo.id ? <Profile playerName={playerInfo.name} /> : <Lobby />}
+      {playerInfo.id && <WomGame />}
     </Box>
   )
 }
