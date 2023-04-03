@@ -26,6 +26,7 @@ const WomProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
         status: false,
         counterAppeared,
         molePosition: 4,
+        totalRound: counterAppeared,
         players: {
           [playerId]: {
             id: playerId,

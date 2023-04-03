@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogTitle, Stack, Typography } from '@mui/material'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import { onValue, push, ref, set } from 'firebase/database'
@@ -20,11 +20,26 @@ export default function WomGame() {
     status: false,
     counterAppeared: 20,
     molePosition: 4,
+    totalRound: 20,
   })
+  const [gameStartCountdown, setGameStartCountdown] = useState<number>(3)
 
   useEffect(() => {
     womDatabaseConnectionInit()
   }, [])
+
+  useEffect(() => {
+    if (gameData.status) {
+      let totalSeconds = 3
+      const countdownInterval = setInterval(() => {
+        setGameStartCountdown(totalSeconds)
+        totalSeconds--
+        if (totalSeconds < 0) {
+          clearInterval(countdownInterval)
+        }
+      }, 1000)
+    }
+  }, [gameData.status])
 
   const toggleGameStatus = (status: boolean) => {
     set(ref(database, `wom/${playerInfo.roomId}/status`), status)
@@ -43,10 +58,14 @@ export default function WomGame() {
 
   const initializeRounds = () => {
     let rounds: Record<number, string[]> = {}
-    Array(gameData.counterAppeared).forEach((_, i) => {
+    Array(gameData.totalRound).forEach((_, i) => {
       rounds[i] = []
     })
     set(ref(database, `wom/${playerInfo.roomId}/rounds`), rounds)
+    set(
+      ref(database, `wom/${playerInfo.roomId}/counterAppeared`),
+      gameData.totalRound
+    )
   }
 
   const pushMoleClick = () => {
@@ -89,14 +108,28 @@ export default function WomGame() {
   return (
     <Stack>
       {playerInfo.status === 'GM' && (
-        <Button
-          variant="contained"
-          onClick={handleStart}
-          disabled={gameData.status}
-        >
-          Start Game
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            onClick={handleStart}
+            disabled={gameData.status}
+          >
+            Start Game
+          </Button>
+          <Button
+            variant="contained"
+            onClick={initializeRounds}
+            disabled={gameData.status}
+            color="success"
+          >
+            Rematch
+          </Button>
+        </Stack>
       )}
+      <Dialog open={gameStartCountdown > 0 && gameData.status}>
+        <DialogTitle>Game will be start in</DialogTitle>
+        <Typography variant='h3' sx={{ textAlign: 'center'}}>{gameStartCountdown}</Typography>
+      </Dialog>
       <Stack direction="row" spacing={5}>
         <ImageList sx={{ width: 600, height: 600 }} cols={3}>
           {itemData.map((item, idx) => (

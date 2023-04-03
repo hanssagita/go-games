@@ -12,4 +12,5 @@ export interface gameData {
   molePosition: number,
   players?: Record<string, playerInfoData>
   rounds?: Record<number, string[]>
+  totalRound: number
 }

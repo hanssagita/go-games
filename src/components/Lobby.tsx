@@ -2,19 +2,28 @@ import { Box, Button, TextField, Stack } from '@mui/material'
 import React, { useState, useContext, useEffect } from 'react'
 import { useWomContext } from '../context/WomContext'
 import { toast } from 'react-toastify'
+import { useLocation } from 'react-router-dom'
+import queryString from 'query-string'
+
 
 const Lobby = () => {
+  const { search } = useLocation()
+  const { gameId } = queryString.parse(search)
+
   const [name, setName] = useState<string>('')
   const [visiblePlayerSetting, setVisiblePlayerSetting] =
     useState<boolean>(false)
   const [visibleGameMasterSetting, setVisibleGameMasterSetting] =
     useState<boolean>(false)
-  const [roomIdInput, setRoomIdInput] = useState<string>('')
+  const [roomIdInput, setRoomIdInput] = useState<string>(gameId as string || '')
   const { createNewRoom, joinNewRoom, playerInfo } = useWomContext()
   const [counterAppeared, setCounterAppeared] = useState<number>(0)
+  const [loadingJoiningGame, setLoadingJoiningGame] = useState<boolean>(false)
+  
 
   const handleGameMaster = () => {
-    if (!name) return
+    if (!name || loadingJoiningGame) return
+    setLoadingJoiningGame(true)
     // Hit Firebase create room
     createNewRoom(name, counterAppeared, (success) => {
       if (success) {
@@ -26,10 +35,13 @@ const Lobby = () => {
           theme: 'light',
         })
       }
+      setLoadingJoiningGame(false)
     })
   }
 
   const handleJoiningRoom = () => {
+    if (!name || loadingJoiningGame) return
+    setLoadingJoiningGame(true)
     // TODO validate existing gameId
     joinNewRoom(name, roomIdInput, (success) => {
       if (success) {
@@ -41,16 +53,27 @@ const Lobby = () => {
           theme: 'light',
         })
       }
+      setLoadingJoiningGame(false)
     })
+  }
+
+  const handleGameMasterMenu = () => {
+    setVisibleGameMasterSetting(true)
+    setVisiblePlayerSetting(false)
+  }
+
+  const handlePlayerMenu = () => {
+    setVisiblePlayerSetting(true)
+    setVisibleGameMasterSetting(false)
   }
 
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={2}>
-        <Button variant="contained" color="success" onClick={() => setVisibleGameMasterSetting(true)}>
+        <Button variant="contained" color="success" onClick={handleGameMasterMenu}>
           Game Master
         </Button>
-        <Button variant="contained" onClick={() => setVisiblePlayerSetting(true)}>
+        <Button variant="contained" onClick={handlePlayerMenu}>
           Join Room
         </Button>
       </Stack>
@@ -98,7 +121,7 @@ const Lobby = () => {
           />
           <TextField
             id="outlined-basic"
-            label="Input Room Id"
+            label="Total Mole Appeared"
             variant="outlined"
             size="small"
             value={counterAppeared}

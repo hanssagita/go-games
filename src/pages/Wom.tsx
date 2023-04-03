@@ -45,7 +45,7 @@ const Wom = () => {
 
   return (
     <Box>
-      {playerInfo.id ? <Profile playerName={playerInfo.name} /> : <Lobby />}
+      {playerInfo.id ? <Profile playerName={playerInfo.name} roomId={playerInfo.roomId} /> : <Lobby />}
       {playerInfo.id && <WomGame />}
     </Box>
   )
