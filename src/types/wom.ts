@@ -11,4 +11,5 @@ export interface gameData {
   counterAppeared: number,
   molePosition: number,
   players?: Record<string, playerInfoData>
+  rounds?: Record<number, string[]>
 }
