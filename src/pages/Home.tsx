@@ -31,7 +31,7 @@ const Home = () => {
   }
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction={{ sm: 'column', md: 'row' }} gap={4}>
       <Card sx={{ maxWidth: 345 }}>
         <CardMedia component="img" alt="Wom" height="140" image={WomIcon} />
         <CardContent>

@@ -8,7 +8,7 @@ const Profile: React.FC<{ playerName?: string; roomId?: string }> = ({
   roomId,
 }) => {
   const handleShareButton = async () => {
-    await navigator.clipboard.writeText(`https://go-games.surge.sh/?gameId=${roomId}`)
+    await navigator.clipboard.writeText(`https://go-games.surge.sh/wom?gameId=${roomId}`)
     toast.success(`Game room is copied to the clipboard`, {
       position: 'top-center',
       autoClose: 2000,
