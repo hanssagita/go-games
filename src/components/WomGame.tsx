@@ -131,7 +131,7 @@ export default function WomGame() {
         <Typography variant='h3' sx={{ textAlign: 'center'}}>{gameStartCountdown}</Typography>
       </Dialog>
       <Stack direction={{ sm: 'column', md: 'row' }} gap={3}>
-        <ImageList sx={{ width: {md: 100, sm: '100%'}, height: {md: 600, sm: '100%'} }} cols={3}>
+        <ImageList sx={{ width: {md: 600, sm: '100%'}, height: {md: 600, sm: '100%'} }} cols={3}>
           {itemData.map((item, idx) => (
             <ImageListItem key={idx}>
               <img
