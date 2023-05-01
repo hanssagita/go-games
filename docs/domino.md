@@ -33,13 +33,13 @@ classDiagram
     class Gameplay{
         -String id
         -String playingUserId
-        -Map[int, UserDeck] userDecks
+        -Map[String, UserDeck] userDecks
         -Map[int, Tile] placedTiles
         -Tile[] stockTiles
         -String[] winnerUserIds
         -shuffleTiles()
         -distributeTiles()
-        -placeTile(int userId, int tileId, int siblingTileId)
+        -placeTile(int userId, int tileId, int siblingTileId, Function errorCallback)
     }
     Tile -- UserDeck
     UserDeck --  Gameplay
