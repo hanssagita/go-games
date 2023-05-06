@@ -1,6 +1,14 @@
-import { Box, Divider, Grid } from '@mui/material'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import React from 'react'
+import blank from '../../assets/domino/tiles/blank.png'
+import five from '../../assets/domino/tiles/five.png'
+import four from '../../assets/domino/tiles/four.png'
+import one from '../../assets/domino/tiles/one.png'
+import six from '../../assets/domino/tiles/six.png'
+import three from '../../assets/domino/tiles/three.png'
+import two from '../../assets/domino/tiles/two.png'
 import { TileData } from '../../types/domino/tile'
 
 interface DominoTileData {
@@ -9,35 +17,49 @@ interface DominoTileData {
 }
 
 interface DominoTileSpotData {
-  value: number
+  value?: number
 }
+
+const minTileDim = 4
+const maxTileDim = 8
 
 export const DominoTileSpot: React.FC<DominoTileSpotData> = ({ value }) => {
   return (
-    <Grid container spacing={1} padding="1.5px">
-      {Array.from(Array(value).keys()).map((i) => (
-        <Grid item xs={4} key={i}>
-          <Box
-            borderRadius="50%"
-            bgcolor="black"
-            height="5px"
-            width="5px"
-          ></Box>
-        </Grid>
-      ))}
-    </Grid>
+    <Box
+      component="img"
+      sx={{
+        height: `${minTileDim}vh`,
+        width: `${minTileDim}vh`,
+      }}
+      alt="The house from the offer."
+      src={
+        value === 1
+          ? one
+          : value === 2
+          ? two
+          : value === 3
+          ? three
+          : value === 4
+          ? four
+          : value === 5
+          ? five
+          : value === 6
+          ? six
+          : blank
+      }
+    />
   )
 }
 
 export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
-  // TODO Styling needs work
+  const isHorizontal: boolean = tile.rotation!! % 180 === 0
+
   return (
     <Stack
-      minHeight={tile.rotation!! % 180 === 0 ? '2vh' : '4vh'}
-      minWidth={tile.rotation!! % 180 === 0 ? '4vw' : '2vw'}
-      maxHeight={tile.rotation!! % 180 === 0 ? '2vh' : '4vh'}
-      maxWidth={tile.rotation!! % 180 === 0 ? '4vw' : '2vw'}
-      border="1px black solid"
+      minHeight={`${minTileDim}vh`}
+      minWidth={`${minTileDim}vh`}
+      maxHeight={`${isHorizontal ? minTileDim : maxTileDim}vh`}
+      maxWidth={`${isHorizontal ? maxTileDim : minTileDim}vh`}
       bgcolor="white"
       direction={
         tile.rotation === 0
@@ -51,28 +73,18 @@ export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
       justifyContent="center"
       onClick={rotateRight}
     >
-      <Box
-        height={tile.rotation!! % 180 === 0 ? '1vh' : '3vh'}
-        width={tile.rotation!! % 180 === 0 ? '3vw' : '1vw'}
-      >
-        {/* TODO Styling needs work */}
-        {/* {tile.spotA && <DominoTileSpot value={tile.spotA} />} */}
-        {tile.spotA}
+      <Box width={`${minTileDim}vh`} height={`${minTileDim}vh`}>
+        <DominoTileSpot value={tile.spotA} />
       </Box>
       <Divider
-        orientation={tile.rotation!! % 180 === 0 ? 'vertical' : 'horizontal'}
+        orientation={isHorizontal ? 'vertical' : 'horizontal'}
         flexItem
         sx={{
-          bgcolor: 'black',
+          bgcolor: 'red',
         }}
       />
-      <Box
-        height={tile.rotation!! % 180 === 0 ? '1vh' : '3vh'}
-        width={tile.rotation!! % 180 === 0 ? '3vw' : '1vw'}
-      >
-        {/* TODO Styling needs work */}
-        {/* {tile.spotB && <DominoTileSpot value={tile.spotB} />} */}
-        {tile.spotB}
+      <Box width={`${minTileDim}vh`} height={`${minTileDim}vh`}>
+        <DominoTileSpot value={tile.spotB} />
       </Box>
     </Stack>
   )
