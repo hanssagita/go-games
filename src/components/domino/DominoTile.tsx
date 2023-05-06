@@ -52,7 +52,8 @@ export const DominoTileSpot: React.FC<DominoTileSpotData> = ({ value }) => {
 }
 
 export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
-  const isHorizontal: boolean = tile.rotation!! % 180 === 0
+  const rotation = tile.rotation || 0
+  const isHorizontal: boolean = rotation % 180 === 0
 
   return (
     <Stack
@@ -62,11 +63,11 @@ export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
       maxWidth={`${isHorizontal ? maxTileDim : minTileDim}vh`}
       bgcolor="white"
       direction={
-        tile.rotation === 0
+        rotation === 0
           ? 'row'
-          : tile.rotation === 90
+          : rotation === 90
           ? 'column'
-          : tile.rotation === 180
+          : rotation === 180
           ? 'row-reverse'
           : 'column-reverse'
       }

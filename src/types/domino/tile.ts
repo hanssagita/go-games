@@ -104,7 +104,7 @@ export class Tile implements TileData, TileAction {
         }
         break
     }
-    return this;
+    return this
   }
 
   value(): number {
