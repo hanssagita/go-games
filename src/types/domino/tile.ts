@@ -38,11 +38,16 @@ export class Tile implements TileData, TileAction {
     this.bottomTileId = tileData.bottomTileId
   }
 
-  rotateRight() {
-    this.rotation = ((this.rotation + 90) % 360) as Rotation
+  asTileData(): TileData {
+    return this as TileData
   }
 
-  linkTile(tile: TileData) {
+  rotateRight(): Tile {
+    this.rotation = ((this.rotation + 90) % 360) as Rotation
+    return this
+  }
+
+  linkTile(tile: TileData): Tile {
     switch (tile.rotation) {
       case 0:
         if (tile.spotA === this.spotA) {
@@ -99,6 +104,7 @@ export class Tile implements TileData, TileAction {
         }
         break
     }
+    return this;
   }
 
   value(): number {
