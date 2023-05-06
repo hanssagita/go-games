@@ -17,25 +17,28 @@ export class UserDeck implements UserDeckData, UserDeckAction {
     this.tiles = userDeckData.tiles
   }
 
-  rotateRightTile(tileId: number) {
-    const tile = new Tile(this.tiles[tileId])
-    tile.rotateRight()
-    this.tiles[tileId] = tile as TileData
+  rotateRightTile(tileId: number): UserDeck {
+    console.log(this.tiles[tileId].rotation)
+    this.tiles[tileId] = new Tile(this.tiles[tileId]).rotateRight().asTileData()
+    console.log(this.tiles[tileId].rotation)
+    return this
   }
 
   placeTile(tileId: number, siblingTileId: number): TileData {
-    let siblingTile = new Tile(this.tiles[siblingTileId])
-    let placedTile = new Tile(this.tiles[tileId])
-
-    placedTile.linkTile(siblingTile)
-
+    const placedTileData = new Tile(this.tiles[tileId])
+      .linkTile(this.tiles[siblingTileId])
+      .asTileData()
     delete this.tiles[tileId]
-    return placedTile as TileData
+    return placedTileData
   }
 
-  getTileValues() {
+  getTileValues(): number {
     return Object.values(this.tiles)
-      .map((iTile) => new Tile(iTile).value())
+      .map((tileData) => new Tile(tileData).value())
       .reduce((sum, value) => sum + value, 0)
+  }
+
+  asUserDeckData(): UserDeckData {
+    return this as UserDeckData
   }
 }

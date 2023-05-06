@@ -13,23 +13,28 @@ import { TileData } from '../../types/domino/tile'
 
 interface DominoTileData {
   tile: TileData
+  isSelected: boolean
   rotateRight: () => void
 }
 
 interface DominoTileSpotData {
   value?: number
+  dim: string
 }
 
 const minTileDim = 4
 const maxTileDim = 8
 
-export const DominoTileSpot: React.FC<DominoTileSpotData> = ({ value }) => {
+export const DominoTileSpot: React.FC<DominoTileSpotData> = ({
+  value,
+  dim,
+}) => {
   return (
     <Box
       component="img"
       sx={{
-        height: `${minTileDim}vh`,
-        width: `${minTileDim}vh`,
+        height: dim,
+        width: dim,
       }}
       alt="The house from the offer."
       src={
@@ -51,16 +56,23 @@ export const DominoTileSpot: React.FC<DominoTileSpotData> = ({ value }) => {
   )
 }
 
-export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
+export const DominoTile: React.FC<DominoTileData> = ({
+  tile,
+  isSelected,
+  rotateRight,
+}) => {
   const rotation = tile.rotation || 0
-  const isHorizontal: boolean = rotation % 180 === 0
+  const isHorizontal = rotation % 180 === 0
+
+  const multiplier = isSelected ? 1.5 : 1
+  const size = (value: number) => value * multiplier
 
   return (
     <Stack
-      minHeight={`${minTileDim}vh`}
-      minWidth={`${minTileDim}vh`}
-      maxHeight={`${isHorizontal ? minTileDim : maxTileDim}vh`}
-      maxWidth={`${isHorizontal ? maxTileDim : minTileDim}vh`}
+      minHeight={`${size(minTileDim)}vh`}
+      minWidth={`${size(minTileDim)}vh`}
+      maxHeight={`${size(isHorizontal ? minTileDim : maxTileDim)}vh`}
+      maxWidth={`${size(isHorizontal ? maxTileDim : minTileDim)}vh`}
       bgcolor="white"
       direction={
         rotation === 0
@@ -74,8 +86,8 @@ export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
       justifyContent="center"
       onClick={rotateRight}
     >
-      <Box width={`${minTileDim}vh`} height={`${minTileDim}vh`}>
-        <DominoTileSpot value={tile.spotA} />
+      <Box width={`${size(minTileDim)}vh`} height={`${size(minTileDim)}vh`}>
+        <DominoTileSpot value={tile.spotA} dim={`${size(minTileDim)}vh`} />
       </Box>
       <Divider
         orientation={isHorizontal ? 'vertical' : 'horizontal'}
@@ -84,8 +96,8 @@ export const DominoTile: React.FC<DominoTileData> = ({ tile, rotateRight }) => {
           bgcolor: 'red',
         }}
       />
-      <Box width={`${minTileDim}vh`} height={`${minTileDim}vh`}>
-        <DominoTileSpot value={tile.spotB} />
+      <Box width={`${size(minTileDim)}vh`} height={`${size(minTileDim)}vh`}>
+        <DominoTileSpot value={tile.spotB} dim={`${size(minTileDim)}vh`} />
       </Box>
     </Stack>
   )
